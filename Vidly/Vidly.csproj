@@ -241,6 +241,10 @@
     <Compile Include="Migrations\201811181526114_SetNameAsRequiredMembershipType.Designer.cs">
       <DependentUpon>201811181526114_SetNameAsRequiredMembershipType.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201811181719516_UpdateMovieValidations.cs" />
+    <Compile Include="Migrations\201811181719516_UpdateMovieValidations.Designer.cs">
+      <DependentUpon>201811181719516_UpdateMovieValidations.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Customer.cs" />
@@ -381,6 +385,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201811181526114_SetNameAsRequiredMembershipType.resx">
       <DependentUpon>201811181526114_SetNameAsRequiredMembershipType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811181719516_UpdateMovieValidations.resx">
+      <DependentUpon>201811181719516_UpdateMovieValidations.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

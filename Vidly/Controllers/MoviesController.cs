@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Data.Entity;
 using System.Web.Mvc;
 using Vidly.Models;
@@ -28,6 +27,7 @@ namespace Vidly.Controllers
             var genres = _context.Genres.OrderBy(g => g.Id).ToList();
             var viewModel = new MovieFormViewModel
             {
+                Movie = new Movie(),
                 Genres = genres
             };
             return View("MovieForm", viewModel);
@@ -35,8 +35,19 @@ namespace Vidly.Controllers
 
         // POST movies/save
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Save(Movie movie)
         {
+            if (!ModelState.IsValid)
+            {
+                var viewModel = new MovieFormViewModel
+                {
+                    Movie = movie,
+                    Genres = _context.Genres.OrderBy(g => g.Id).ToList()
+                };
+                return View("MovieForm", viewModel);
+            }
+
             if (movie.Id == 0)
             {
                 movie.DateAdded = DateTime.UtcNow;
