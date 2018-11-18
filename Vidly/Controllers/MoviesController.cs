@@ -27,7 +27,6 @@ namespace Vidly.Controllers
             var genres = _context.Genres.OrderBy(g => g.Id).ToList();
             var viewModel = new MovieFormViewModel
             {
-                Movie = new Movie(),
                 Genres = genres
             };
             return View("MovieForm", viewModel);
@@ -40,9 +39,8 @@ namespace Vidly.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var viewModel = new MovieFormViewModel
+                var viewModel = new MovieFormViewModel(movie)
                 {
-                    Movie = movie,
                     Genres = _context.Genres.OrderBy(g => g.Id).ToList()
                 };
                 return View("MovieForm", viewModel);
@@ -91,9 +89,8 @@ namespace Vidly.Controllers
             if (movie == null)
                 return HttpNotFound();
 
-            var viewModel = new MovieFormViewModel
+            var viewModel = new MovieFormViewModel(movie)
             {
-                Movie = movie,
                 Genres = _context.Genres.OrderBy(g => g.Id).ToList()
             };
             return View("MovieForm", viewModel);
