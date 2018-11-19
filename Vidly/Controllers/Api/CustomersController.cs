@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
@@ -30,7 +29,7 @@ namespace Vidly.Controllers.Api
             var customer = _context.Customers.SingleOrDefault(c => c.Id == id);
 
             if (customer == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return NotFound();
             return Ok(Mapper.Map<Customer, CustomerDto>(customer));
         }
 
@@ -46,15 +45,15 @@ namespace Vidly.Controllers.Api
             _context.SaveChanges();
 
             customerDto.Id = customer.Id;
-            return Created(new Uri($"{Request.RequestUri}/{customer.Id}"),customerDto );
+            return Created(new Uri($"{Request.RequestUri}/{customer.Id}"), customerDto);
         }
 
         // PUT /api/customer/1
         [HttpPut]
-        public void UpdateCustomer(int id, CustomerDto customerDto)
+        public IHttpActionResult UpdateCustomer(int id, CustomerDto customerDto)
         {
             if (!ModelState.IsValid)
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
+                return BadRequest();
 
             var customerInDb = _context.Customers.SingleOrDefault(c => c.Id == id);
             if (customerInDb == null)
@@ -63,18 +62,20 @@ namespace Vidly.Controllers.Api
             Mapper.Map(customerDto, customerInDb);
 
             _context.SaveChanges();
+            return Ok(new Uri($"{Request.RequestUri}"));
         }
 
         // DELETE /api/customer/1
         [HttpDelete]
-        public void DeleteCustomer(int id)
+        public IHttpActionResult DeleteCustomer(int id)
         {
            var customerInDb = _context.Customers.SingleOrDefault(c => c.Id == id);
             if (customerInDb == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return NotFound();
 
             _context.Customers.Remove(customerInDb);
             _context.SaveChanges();
+            return Ok(new Uri($"{Request.RequestUri}"));
         }
     }
 }
