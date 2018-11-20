@@ -21,12 +21,12 @@ namespace Vidly.Controllers.Api
         // GET /api/customers
         public IHttpActionResult GetCustomers()
         {
-            var customerDtos = _context.Customers
+            var customersDto = _context.Customers
                 .Include(c => c.MembershipType)
                 .ToList()
                 .Select(Mapper.Map<Customer, CustomerDto>);
 
-            return Ok(customerDtos); 
+            return Ok(customersDto); 
         }
 
         // GET /api/customers/1
