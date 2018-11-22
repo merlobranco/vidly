@@ -20,7 +20,42 @@ namespace Vidly.Controllers
             _context.Dispose();
         }
 
+        // GET: customers
+        public ViewResult Index()
+        {
+            //var customers = _context.Customers.Include(c => c.MembershipType).ToList();
+            //return View(customers);
+            return View();
+        }
+
+        // GET: customers/details/id
+        public ActionResult Details(int id)
+        {
+            var customer = _context.Customers.Include(c => c.MembershipType).SingleOrDefault(c => c.Id == id);
+            if (customer == null)
+                return HttpNotFound();
+            return View(customer);
+        }
+
+        // GET: customers/edit/id
+        [Authorize(Roles = RoleName.CanManageMovies)]
+        public ActionResult Edit(int id)
+        {
+            var customer = _context.Customers.SingleOrDefault(c => c.Id == id);
+            if (customer == null)
+                return HttpNotFound();
+
+            var viewModel = new CustomerFormViewModel
+            {
+                Customer = customer,
+                MembershipTypes = _context.MemberShipTypes.OrderBy(m => m.Id).ToList()
+            };
+
+            return View("CustomerForm", viewModel);
+        }
+
         // GET: customers/new
+        [Authorize(Roles = RoleName.CanManageMovies)]
         public ActionResult New()
         {
             var membershipTypes = _context.MemberShipTypes.OrderBy(m => m.Id).ToList();
@@ -35,6 +70,7 @@ namespace Vidly.Controllers
         // POST: customers/save
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = RoleName.CanManageMovies)]
         public ActionResult Save(Customer customer)
         {
             if (!ModelState.IsValid)
@@ -62,39 +98,6 @@ namespace Vidly.Controllers
             _context.SaveChanges();
 
             return RedirectToAction("Index", "Customers");
-        }
-
-        // GET: customers
-        public ViewResult Index()
-        {
-            //var customers = _context.Customers.Include(c => c.MembershipType).ToList();
-            //return View(customers);
-            return View();
-        }
-
-        // GET: customers/details/id
-        public ActionResult Details(int id)
-        {
-            var customer = _context.Customers.Include(c => c.MembershipType).SingleOrDefault(c => c.Id == id);
-            if (customer == null)
-                return HttpNotFound();
-            return View(customer);
-        }
-
-        // GET: customers/edit/id
-        public ActionResult Edit(int id)
-        {
-            var customer = _context.Customers.SingleOrDefault(c => c.Id == id);
-            if (customer == null)
-                return HttpNotFound();
-
-            var viewModel = new CustomerFormViewModel
-            {
-                Customer = customer,
-                MembershipTypes = _context.MemberShipTypes.OrderBy(m => m.Id).ToList()
-            };
-
-            return View("CustomerForm", viewModel);
         }
     }
 }
