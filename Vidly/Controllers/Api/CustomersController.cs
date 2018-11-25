@@ -6,6 +6,7 @@ using System.Web.Http;
 using Vidly.Dtos;
 using Vidly.Models;
 using System.Data.Entity;
+using System.Collections.Generic;
 
 namespace Vidly.Controllers.Api
 {
@@ -18,11 +19,16 @@ namespace Vidly.Controllers.Api
             _context = new ApplicationDbContext();
         }
 
-        // GET /api/customers
-        public IHttpActionResult GetCustomers()
+        // GET /api/customers/[query]
+        public IHttpActionResult GetCustomers(string query = null)
         {
-            var customersDto = _context.Customers
-                .Include(c => c.MembershipType)
+            var customersQuery = _context.Customers
+                .Include(c => c.MembershipType);
+
+            if (!string.IsNullOrWhiteSpace(query))
+                customersQuery = customersQuery.Where(c => c.Name.Contains(query));
+
+            var customersDto = customersQuery
                 .ToList()
                 .Select(Mapper.Map<Customer, CustomerDto>);
 
@@ -55,7 +61,7 @@ namespace Vidly.Controllers.Api
             return Created(new Uri($"{Request.RequestUri}/{customer.Id}"), customerDto);
         }
 
-        // PUT /api/customer/1
+        // PUT /api/customers/1
         [HttpPut]
         [Authorize(Roles = RoleName.CanManageMovies)]
         public IHttpActionResult UpdateCustomer(int id, CustomerDto customerDto)

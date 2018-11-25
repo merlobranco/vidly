@@ -16,7 +16,6 @@ namespace Vidly.Dtos
         [Range(1, 20)]
         public byte NumberInStock { get; set; }
 
-        [Display(Name = "Genre")]
         [Required]
         public byte GenreId { get; set; }
 
